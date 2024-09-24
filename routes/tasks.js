@@ -1,7 +1,7 @@
 import "dotenv/config"
 import express from "express";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, QueryCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, QueryCommand, PutCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({
     region: process.env.AWS_REGION,
@@ -30,8 +30,6 @@ router.get('/:userId', async (req, res) => {
 });
 
 router.post('/:userId', async (req, res) => {
-    console.log(req.body);
-
     const command = new PutCommand({
         TableName: "starboard-tasks",
         Item: {
@@ -39,6 +37,19 @@ router.post('/:userId', async (req, res) => {
           TaskId: req.body.taskId,
           Title: req.body.title,
           DueDate: req.body.dueDate,
+        },
+    });
+
+    const response = await docClient.send(command);
+    res.status(200).send(response);
+});
+
+router.delete('/:userId/:taskId', async (req, res) => {
+    const command = new DeleteCommand({
+        TableName: "starboard-tasks",
+        Key: {
+            UserId: req.params.userId,
+            TaskId: parseInt(req.params.taskId),
         },
     });
 
