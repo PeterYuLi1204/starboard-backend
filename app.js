@@ -7,8 +7,13 @@ const app = express();
 const router = express.Router();
 const port = process.env.PORT || 3000;
 
-// allows all origins (DISABLE LATER)
-app.use(cors());
+app.use(cors({
+    origin: [
+        'http://localhost:4015', 
+        'http://localhost:5173', 
+        'https://starboard-app.netlify.app'
+    ]
+}));
 
 app.use(express.json());
 
