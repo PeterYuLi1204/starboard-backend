@@ -11,7 +11,7 @@ app.use(express.json());
 app.use('/tasks', tasks);
 
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.status(200).send('Hello World!');
 });
   
 app.listen(port, () => {
